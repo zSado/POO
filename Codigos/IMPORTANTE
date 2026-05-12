@@ -1,0 +1,68 @@
+Insertar un usuario administrador en la base de datos
+USE empresa;
+INSERT INTO persona (nombre, direccion, telefono, correo, fechaInicioContrato, salario, rol, username, password_hash, permisos)
+VALUES ('Admin Principal', 'Oficina Central', '942320717', 'admin@gmail.com', '2024-01-01', 5000.00, 'Administrador', 'admin', SHA2('admin123', 256), '["todos"]');
+
+Instalar
+
+pip install pymysql
+pip install cryptography
+
+
+Base de datos MySQL para la empresa
+CREATE DATABASE IF NOT EXISTS empresa;
+USE empresa;
+
+CREATE TABLE persona (
+    idUnico INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    direccion VARCHAR(200),
+    telefono VARCHAR(20),
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    fechaInicioContrato DATE NOT NULL,
+    salario DECIMAL(10,2) NOT NULL,
+    rol ENUM('Empleado','Gerente','Administrador') NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    departamento_id INT NULL,
+    managed_departamento_id INT NULL,
+    permisos TEXT NULL
+);
+
+CREATE TABLE departamento (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) UNIQUE NOT NULL,
+    tipoDepartamento VARCHAR(100) NOT NULL,
+    gerente_id INT UNIQUE NULL,
+    FOREIGN KEY (gerente_id) REFERENCES persona(idUnico) ON DELETE SET NULL
+);
+
+CREATE TABLE proyecto (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    fechaInicio DATE NOT NULL
+);
+
+CREATE TABLE registro_tiempo (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    empleado_id INT NOT NULL,
+    proyecto_id INT NOT NULL,
+    fecha DATE NOT NULL,
+    horasTrabajadas DECIMAL(5,2) NOT NULL,
+    tareasRealizadas TEXT,
+    FOREIGN KEY (empleado_id) REFERENCES persona(idUnico) ON DELETE CASCADE,
+    FOREIGN KEY (proyecto_id) REFERENCES proyecto(id) ON DELETE CASCADE
+);
+
+CREATE TABLE asignacion_proyecto (
+    empleado_id INT NOT NULL,
+    proyecto_id INT NOT NULL,
+    PRIMARY KEY (empleado_id, proyecto_id),
+    FOREIGN KEY (empleado_id) REFERENCES persona(idUnico) ON DELETE CASCADE,
+    FOREIGN KEY (proyecto_id) REFERENCES proyecto(id) ON DELETE CASCADE
+);
+
+Buscar en la base de datos para verificar
+use empresa;
+SELECT * FROM Persona;
