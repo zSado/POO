@@ -1,0 +1,4 @@
+INSTALAR
+
+pip install pymysql
+pip install cryptography
