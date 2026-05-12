@@ -1,0 +1,11 @@
+Insertar Admin ala base de datos
+
+
+USE empresa;
+
+INSERT INTO persona (nombre, direccion, telefono, correo, fechaInicioContrato, salario, rol, username, password_hash, permisos) 
+VALUES ('Admin Principal', 'Oficina Central', '942320717', 'admin@gmail.com', '2024-01-01', 5000.00, 'Administrador', 'admin', SHA2('admin123', 256), '["todos"]');
+
+buscar en la base de datos para verificar 
+
+SELECT * FROM Persona;
